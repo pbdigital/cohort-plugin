@@ -3,6 +3,7 @@
 //     'group_id' => get_field('associated_buddyboss_group'),
 //     'exclude_admins_mods' => 0
 // ));
+// echo do_shortcode('[bpps_group_members group_id="'.get_field('associated_buddyboss_group').'" option="avatar-grid"]');
 ?>
 <!-- <pre> -->
 <?php
@@ -39,7 +40,7 @@ if (bp_group_has_members([
 
     <?php //bp_nouveau_group_hook('before', 'members_list'); ?>
 
-    <ul id="members-list" class="<?php bp_nouveau_loop_classes(); ?> members-list">
+    <ul id="members-list" class="<?php bp_nouveau_loop_classes(); ?> members-list cohort-member-list">
 
         <?php
         while (bp_group_members()) :
@@ -55,11 +56,8 @@ if (bp_group_has_members([
 
             // Get member followers element.
             $followers_count = '';
-            if ($enabled_followers && function_exists('bb_get_followers_count')) {
-                ob_start();
-                bb_get_followers_count(bp_get_member_user_id());
-                $followers_count = ob_get_clean();
-            }
+            $followers = bp_get_followers( array( 'user_id' => bp_get_member_user_id() ) );
+            $followers_count = count( $followers );
 
             // Member joined data.
             $member_joined_date = bp_get_group_member_joined_since();
@@ -79,7 +77,7 @@ if (bp_group_has_members([
             $moderation_class   = function_exists('bp_moderation_is_user_blocked') && bp_moderation_is_user_blocked(bp_get_group_member_id()) ? $moderation_class . ' bp-user-blocked' : $moderation_class;
         ?>
             <li <?php bp_member_class(array('item-entry')); ?> data-bp-item-id="<?php echo esc_attr(bp_get_group_member_id()); ?>" data-bp-item-component="members">
-                <div class="list-wrap <?php echo esc_attr($footer_buttons_class); ?> <?php echo esc_attr($follow_class); ?> <?php echo $member_loop_has_content ? esc_attr(' has_hook_content') : esc_attr(''); ?> <?php echo !empty($profile_actions['secondary']) ? esc_attr('secondary-buttons') : esc_attr('no-secondary-buttons'); ?> <?php echo !empty($primary_action_btn) ? esc_attr('primary-button') : esc_attr('no-primary-buttons'); ?>">
+                <div class="list-member-inner list-wrap <?php echo esc_attr($footer_buttons_class); ?> <?php echo esc_attr($follow_class); ?> <?php echo $member_loop_has_content ? esc_attr(' has_hook_content') : esc_attr(''); ?> <?php echo !empty($profile_actions['secondary']) ? esc_attr('secondary-buttons') : esc_attr('no-secondary-buttons'); ?> <?php echo !empty($primary_action_btn) ? esc_attr('primary-button') : esc_attr('no-primary-buttons'); ?>">
 
                     <div class="list-wrap-inner">
                         <div class="item-avatar">
@@ -89,6 +87,7 @@ if (bp_group_has_members([
                                     bb_user_presence_html(bp_get_group_member_id());
                                 }
                                 bp_group_member_avatar();
+                                echo '<p class="item-meta member-type info-'.strip_tags(bp_get_user_member_type(bp_get_member_user_id())).'">' . wp_kses_post(bp_get_user_member_type(bp_get_member_user_id())) . '</p>';
                                 ?>
                             </a>
                         </div>
@@ -97,47 +96,12 @@ if (bp_group_has_members([
 
                             <div class="item-block">
 
-                                <?php
-                                if ($enabled_profile_type && function_exists('bp_member_type_enable_disable') && true === bp_member_type_enable_disable() && true === bp_member_type_display_on_profile()) {
-                                    echo '<p class="item-meta member-type only-grid-view">' . wp_kses_post(bp_get_user_member_type(bp_get_member_user_id())) . '</p>';
-                                }
-                                ?>
-
                                 <h2 class="list-title member-name">
                                     <?php bp_group_member_link(); ?>
                                 </h2>
 
-                                <?php
-                                if ($enabled_profile_type && function_exists('bp_member_type_enable_disable') && true === bp_member_type_enable_disable() && true === bp_member_type_display_on_profile()) {
-                                    echo '<p class="item-meta member-type only-list-view">' . wp_kses_post(bp_get_user_member_type(bp_get_member_user_id())) . '</p>';
-                                }
-                                ?>
-
-                                <?php if (($enabled_last_active && $member_last_activity) || ($enabled_joined_date && $member_joined_date)) : ?>
-                                    <p class="item-meta last-activity">
-
-                                        <?php
-                                        if ($enabled_joined_date) :
-                                            echo wp_kses_post($member_joined_date);
-                                        endif;
-                                        ?>
-
-                                        <?php if (($enabled_last_active && $member_last_activity) && ($enabled_joined_date && $member_joined_date)) : ?>
-                                            <span class="separator">&bull;</span>
-                                        <?php endif; ?>
-
-                                        <?php
-                                        if ($enabled_last_active) :
-                                            echo wp_kses_post($member_last_activity);
-                                        endif;
-                                        ?>
-
-                                    </p>
-                                <?php endif; ?>
-                            </div>
-
-                            <div class="flex align-items-center follow-container justify-center">
-                                <?php echo wp_kses_post($followers_count); ?>
+                            <div class="flex align-items-center follow-container justify-center member-details">
+                                <b><?=$followers_count?></b>&nbspfollowers
                             </div>
 
                             <div class="flex only-grid-view align-items-center primary-action justify-center">
@@ -147,17 +111,24 @@ if (bp_group_has_members([
 
                         <div class="member-buttons-wrap">
 
-                            <?php if ($profile_actions['secondary']) { ?>
-                                <div class="flex only-grid-view button-wrap member-button-wrap footer-button-wrap">
-                                    <?php echo wp_kses_post($profile_actions['secondary']); ?>
-                                </div>
-                            <?php } ?>
+                                <?php if ($profile_actions['secondary']) { ?>
+                                    <div class="member-button-wrap footer-button-wrap">
+                                        <?php echo wp_kses_post($profile_actions['secondary']); ?>
+                                    </div>
+                                <?php } ?>
 
-                            <?php if ($profile_actions['primary']) { ?>
-                                <div class="flex only-list-view align-items-center primary-action justify-center">
-                                    <?php echo wp_kses_post($profile_actions['primary']); ?>
-                                </div>
-                            <?php } ?>
+                                
+                                
+                                     <!-- if (function_exists('bp_is_active') && bp_is_active('friends')) { 
+                                         $friendship = BP_Friends_Friendship::check_is_friend( get_current_user_id(), bp_get_member_user_id() );
+                                         if($friendship == 'pending'):
+                                            <a href="#"><img src="PBD_CO_URL/assets/images/pending-friend-request-icon.png" alt=""></a>
+                                        elseif($friendship == 'not_friends'): 
+                                            <a href="#"><img src="PBD_CO_URL/assets/images/add-friend-icon.png" alt=""></a>
+                                        else : 
+                                            <a href="#"><img src="PBD_CO_URL/assets/images/friend-connection-icon.png" alt=""></a>
+                                        endif; 
+                                    }   -->
 
                         </div><!-- .member-buttons-wrap -->
 
@@ -171,17 +142,6 @@ if (bp_group_has_members([
                             <?php bp_nouveau_member_hook('', 'members_list_item'); ?>
                         </div>
                     </div>
-
-                    <?php if (!empty($member_switch_button)) { ?>
-                        <div class="bb_more_options member-dropdown">
-                            <a href="#" class="bb_more_options_action">
-                                <i class="bb-icon-menu-dots-h"></i>
-                            </a>
-                            <div class="bb_more_options_list">
-                                <?php echo wp_kses_post(bp_get_add_switch_button(bp_get_member_user_id())); ?>
-                            </div>
-                        </div><!-- .bb_more_options -->
-                    <?php } ?>
                 </div>
             </li>
 

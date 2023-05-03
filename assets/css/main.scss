@@ -110,6 +110,11 @@ body {
 }
 #cohorts-body .cohorts-body-top {
     padding-bottom: 60px;
+    ul {
+        a {
+            text-decoration: none;
+        }
+    }
 }
 #cohorts-body .cohorts-body-top ul {
     margin: 0;
@@ -898,9 +903,13 @@ progress[value]::-webkit-progress-value {
             background: #000000;
             border-radius: 10px 10px 0px 0px;
             margin-bottom: 30px !important;
+            margin-top: 0;
         }
         ul.hosts {
             padding: 0 20px 30px !important;
+            a {
+                text-decoration: none;
+            }
         }
     }
 }
