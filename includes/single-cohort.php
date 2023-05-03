@@ -16,6 +16,39 @@ get_header();
 				<?php endif; ?>
 			</div>
 			<div class="cohorts-header-right">
+				<div class="cohorts-header-right-mid">
+					<?php
+						$now = new DateTime();
+						$start = new DateTime(get_field('start_date'));
+						if ($start > $now && get_field('length') && $date_diff->d > 0) {
+							$date_diff = $now->diff($start);
+							$date_diff = ($date_diff->d > 1) ? $date_diff->d.' Days' : $date_diff->d.' Day';
+							echo '<h6>Begins in ' . $date_diff . '</h6>';
+						}
+						echo '<h1>' . (get_field('title') ? get_field('title') : get_the_title()) . '</h1>';
+					?>
+
+				</div>
+
+				<div class="cohorts-header-right-bot">
+					<?php if( get_field('length') ): ?>
+						<?php
+							$now = new DateTime();
+							$start = new DateTime(get_field('start_date'));
+							$end = new DateTime(get_field('end_date'));
+							$date_diff = $now->diff($start);
+							if ( ($start->format('m') == $end->format('m')) && ($start->format('y') == $end->format('y')) ) {
+								$schedule = $start->format('F d') . ' - ' . $end->format('d Y');
+							} else {
+								$schedule = $start->format('F d Y') . ' - ' . $end->format('F d Y');
+							}
+						?>
+						<h5><?php the_field('length'); ?> <span>•</span> <?php echo $schedule; ?> </h5>
+					<?php endif; ?>
+					<?php
+					
+					?>
+				</div>
 				<div class="cohorts-header-right-top">
 					<?php if( get_field('description') ): ?>
 						<?php
@@ -23,42 +56,34 @@ get_header();
 							$start_date = new DateTime(get_field('start_date'));
 							$difference = $now->diff($start_date);
 						?>
-						<h6><?php the_field('description'); ?> <?= $now > $start_date ? null : '<span>•</span>  <span class="range"> Begins in '. $difference->d .' days </span>' ?>  </h6>
-					<?php endif; ?>
-				</div>
-				<div class="cohorts-header-right-mid">
-					<h1> <?php echo get_the_title() ?> </h1>
-				</div>
-				<div class="cohorts-header-right-bot">
-					<?php if( get_field('length') ): ?>
 						<?php
-							$start = new DateTime(get_field('start_date'));
-							$end = new DateTime(get_field('end_date'));
-							if ( ($start->format('m') == $end->format('m')) && ($start->format('y') == $end->format('y')) ) {
-								$schedule = $start->format('F d') . ' - ' . $end->format('d Y');
-							} else {
-								$schedule = $start->format('F d Y') . ' - ' . $end->format('F d Y');
-							}
+						$text = get_field('description');
+						$text = str_replace('<p>', '',  $text); // Remove <p> tags
+						$text = str_replace('</p>', '<br><br>', $text); // Replace </p> with <br>
 						?>
-						<h6><?php the_field('length'); ?> <span>•</span> <?php echo $schedule; ?> </h6>
+						<div class="more" style="display: none"><?php echo $text; ?> <?= $now > $start_date ? null : '<span>•</span>  <span class="range"> Begins in '. $difference->d .' days </span>' ?></div>
 					<?php endif; ?>
-					<?php
-					
-					?>
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
-
 <div id="cohorts-body">
 	<div class="container">
 		<div class="cohorts-body-top">
 			<ul>
-				<li> <a href="#"> Overview </a></li>
+				<li><a href="#" class="tablinks active" onclick="cohortTabs(event, 'Overview')"> Overview </a></li>
+
+				<?php if (PBD_Cohorts::is_buddyboss_activity_enabled() && get_field('show_discussion_tab')): ?>
+					<li><a href="#" class="tablinks" onclick="cohortTabs(event, 'Discussion')"> <?php echo get_field('discussion_tab_label');?> </a></li>
+				<?php endif; ?>
+
+				<?php if (PBD_Cohorts::is_buddyboss_group_enabled() && get_field('show_members_tab')): ?>
+					<li><a href="#" class="tablinks" onclick="cohortTabs(event, 'Members')"> <?php echo get_field('members_tab_label');?> </a></li>
+				<?php endif; ?>
 			</ul>
 		</div>
-		<div class="cohorts-body-content">
+		<div id="Overview" class="cohorts-body-content tabcontent">
 			<div class="cohorts-body-left">
 				<div class="cohorts-body-left-top">
 					<?php if( have_rows('steps') ): ?>
@@ -68,6 +93,11 @@ get_header();
 								$now = new DateTime();
 								$step_start_date = new DateTime(get_sub_field('start_date'));
 								$step_end_date = new DateTime(get_sub_field('end_date'));
+
+								$locked = false;
+								if ($now < $step_start_date) {
+									$locked = true;
+								}
 
 								$total_hours = 0;
 								$total_lessons = 0;
@@ -95,8 +125,16 @@ get_header();
 								}
 
 								$percent_total = ($total_completed) ? round($total_completed / $total_lessons * 100, 0) : 0 ;
+								
+								//Instead of basing hours on courses, admin can specify this value
+								if (get_sub_field('hours') > 0){
+									$total_hours = get_sub_field('hours');
+								}
+								// If $percent_total is not already set and $now is greater than $step_end_date,
+								$percent_total = (!$percent_total && $now > $step_end_date) ? 100 : null;
+
 							?>
-							<li class="<?= ($now > $step_end_date) ? 'ended' : null ?>">
+							<li class="<?= ($now > $step_end_date) ? 'ended' : null ?> <?= $locked ? 'locked' : '' ?>" data-progress="<?= $percent_total; ?>">
 								<div class="progressbar <?= ($now >= $step_start_date) ? 'started' : null ?>" data-progress="<?= $percent_total; ?>"> </div>
 								<h3><?php the_sub_field('section_title'); ?></h3>
 								<div class="cohorts-body-left-steps-contents">
@@ -104,9 +142,15 @@ get_header();
 										<h2> <?php the_sub_field('title'); ?> </h2>
 										<p> <?php the_sub_field('description'); ?> </p>
 										<ul>
+											<?php if (!get_sub_field('hide_hours_indicator')){ ?>
 											<li> <img src="<?=  PBD_CO_URL . '/assets/images/timer.png' ?>"> <?= $total_hours ?> hours </li>
+											<?php } ?>
+											<?php if (!get_sub_field('hide_lessons_indicator')){ ?>
 											<li> <img src="<?=  PBD_CO_URL . '/assets/images/player-icon.png' ?>"> <?= $total_lessons ?> lessons </li>
+											<?php } ?>
+											<?php if (!get_sub_field('hide_events_indicator')){ ?>
 											<li> <img src="<?=  PBD_CO_URL . '/assets/images/calendar-icon.png' ?>"> <?= $total_events ?> event </li>
+											<?php } ?>
 										</ul>
 									</div>
 									<div class="cohorts-body-left-steps-contents-type">
@@ -122,12 +166,19 @@ get_header();
 													if ($row_layout == 'course')
 														$post_object = get_sub_field('course');
 													else if ($row_layout == 'event')
-														$post_object = get_sub_field('event');
+														$post_object = get_post(get_sub_field('event'));
 													else if ($row_layout == 'statement_of_commitment')
 														$post_object = get_sub_field('soc');
 													else if ($row_layout == 'simple_link')
 														$post_object = get_sub_field('simple_link');
-
+													else if ($row_layout == 'document')
+														$post_object = get_sub_field('document');
+													else if ($row_layout == 'call_recording')
+														$post_object = get_sub_field('call_recording');
+													else if ($row_layout == 'video')
+														$post_object = get_sub_field('video');
+													else if ($row_layout == 'introduce_yourself')
+													$post_object = get_sub_field('introduce_yourself');
 													if ($row_layout == 'simple_link') {
 														$post_title = get_sub_field('title');
 														$post_sub_title = get_sub_field('description');
@@ -155,11 +206,23 @@ get_header();
 																	}
 																} else if ($row_layout == 'simple_link') {
 																	?> <img src="<?=  PBD_CO_URL . '/assets/images/link-icon.png' ?>"> <?php
+																} else if ($row_layout == 'document') {
+																	?> <img src="<?=  PBD_CO_URL . '/assets/images/document-icon.png' ?>"> <?php
+																}
+																else if ($row_layout == 'call_recording') {
+																	?> <img src="<?=  PBD_CO_URL . '/assets/images/video-icon.png' ?>"> <?php
+																}
+																else if ($row_layout == 'video') {
+																	?> <img src="<?=  PBD_CO_URL . '/assets/images/video-icon.png' ?>"> <?php
+																}
+																else if ($row_layout == 'introduce_yourself') {
+																	?> <img src="<?=  PBD_CO_URL . '/assets/images/introduce-icon.png' ?>"> <?php
 																}
 																else {
 																	$event_month = tribe_get_start_date($post_object->ID, true, 'M');
 																	$event_day = tribe_get_start_date($post_object->ID, true, 'd');
 																	echo "<p> ". $event_month ." <span> ". $event_day ." </span> </p>";
+																	// echo 'here'. $post_object;
 																}
 															?>
 														</div>
@@ -208,7 +271,25 @@ get_header();
 																<div class="cohorts-body-contents-type-details-bot-right">
 																	<?php
 																		if ($row_layout == 'simple_link') {
-																			?> <a href="<?php echo get_sub_field('url'); ?>" <?= (get_field('open_in_new_tab')) ? 'target="_blank"' : '' ?>> <?php echo get_sub_field('button_text'); ?> </a> <?php
+																			?> <a href="<?php echo get_sub_field('url'); ?>" <?= (get_sub_field('open_in_new_tab')) ? 'target="_blank"' : '' ?>> <?php echo get_sub_field('button_text'); ?> </a> <?php
+																		}
+																		else if ($row_layout == 'document') {
+																			?> <a href="<?php echo get_sub_field('url'); ?>" <?= (get_sub_field('open_in_new_tab')) ? 'target="_blank"' : '' ?>> <?php echo get_sub_field('button_text'); ?> </a> <?php
+																		}  
+																		else if ($row_layout == 'introduce_yourself') {
+																			?> <a href="<?php echo get_sub_field('url'); ?>" <?= (get_sub_field('open_in_new_tab')) ? 'target="_blank"' : '' ?>> 
+																			<img src="<?=  PBD_CO_URL . '/assets/images/hand-icon.png' ?>" />
+																			<?php echo get_sub_field('button_text'); ?> </a> <?php
+																		}
+																		else if ($row_layout == 'video') {
+																			?> <a href="<?php echo get_sub_field('url'); ?>" class="video-btn" 
+																			data-embed="<?php echo base64_encode(get_sub_field('embed_code'));?>"> 
+																			<?php echo get_sub_field('button_text'); ?> </a> <?php
+																		} 
+																		else if ($row_layout == 'call_recording') {
+																			$recording = get_sub_field('call_recording');
+																			$url = get_permalink($recording->ID);
+																			?> <a href="<?php echo $url; ?>" <?= (get_sub_field('open_in_new_tab')) ? 'target="_blank"' : '' ?>> <?php echo get_sub_field('button_text'); ?> </a>  <?php
 																		} 
 																		else if ($row_layout == 'event') {
 
@@ -220,12 +301,12 @@ get_header();
 																			
 
 																			if ($attendee_groups) {
-																				?> <a href="<?php echo tribe_get_event_link($post_object->ID); ?>">
+																				?> <a href="<?php echo get_permalink($post_object->ID); ?>">
 																					<img src="<?=  PBD_CO_URL . '/assets/images/check.png' ?>" />
 																				 Going 
 																				 </a> <?php
 																			} else {
-																				?> <a href="<?php echo tribe_get_event_link($post_object->ID); ?>"> Attend </a> <?php
+																				?> <a href="<?php echo get_permalink($post_object->ID); ?>">   <?= tribe_is_past_event($post_object->ID) ? 'Watch Replay' : 'Attend' ?> </a> <?php
 																			}	
 
 																			
@@ -270,6 +351,23 @@ get_header();
 			?>
 			
 		</div>
+		
+		<?php if (PBD_Cohorts::is_buddyboss_activity_enabled() && get_field('show_discussion_tab')): ?>
+			<div id="Discussion" class="cohorts-body-content tabcontent discussion-tabcontent" style="display:none">
+				<?php include_once(PBD_CO_INCLUDES_PATH . '/parts/discussion.php');  ?>
+			</div>
+		<?php endif; ?>
+
+		<?php if (PBD_Cohorts::is_buddyboss_group_enabled() && get_field('show_members_tab')): ?>
+			<div id="Members" class="cohorts-body-content tabcontent members-tabcontent" style="display:none">
+				<div id="buddypress" class="buddypress-wrap bp-single-plain-nav bp-dir-hori-nav">
+					<div id="members-group-list" class="group_members dir-list">
+						<?php include_once(PBD_CO_INCLUDES_PATH . '/parts/members-v2.php');  ?>
+					</div>
+				</div>
+			</div>
+		<?php endif; ?>
+		
 	</div>
 </div>
 
@@ -297,7 +395,23 @@ get_header();
 
 </div>
 
+<!-- Video Modal -->
+<div id="videoModal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+	<span class="close"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 6 6 18M6 6l12 12" stroke="#B3B3B3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+	<div class="embed-code">
+		<div class="fluid-width-video-wrapper" style="padding-top: 380px;"></div>
+	</div>
+  </div>
+
+</div>
+
 <style>
+	#cohorts-body {
+		background: <?= PBD_Cohorts::is_buddyboss_enabled() ? buddyboss_theme_get_option('body_background') : '';?>
+	}
 	.modal {
 		display: none; /* Hidden by default */
 		position: fixed; /* Stay in place */
@@ -319,11 +433,6 @@ get_header();
 		max-width: 740px;
 		padding:57px 50px;
 		height:auto;
-	}
-	@media (max-width:601px) {
-		.modal-content {
-			padding:50px 20px;
-		}
 	}
 
 	/* The Close Button */
@@ -354,11 +463,6 @@ get_header();
 		font-weight: 400;
 		font-size: 14px;
 		line-height: 17px;
-		/* identical to box height */
-
-
-		/* dark text */
-
 		color: #393E41;
 	}
 
@@ -375,6 +479,43 @@ get_header();
 		gap: 10px;
 
 	}
+
+	li.locked div {
+		opacity: 0.5;
+	}
+
+	li.locked .progressbar {
+	}
+
+	li.locked h3:before {
+		content: '\eecc';
+		font-weight: 300;
+		font-family: bb-icons;
+		font-size: 18px;
+		margin-right:5px;
+	}
+
+	<?php
+		$hd_color = PBD_Cohorts::is_buddyboss_enabled() ? buddyboss_theme_get_option('heading_text_color') : null;
+		if ($hd_color) {
+			?>
+				#cohorts-header h6,
+				#cohorts-body .cohorts-body-top ul li a.active,
+				#cohorts-body .cohorts-body-left-steps li.ended::after,
+				span.morecontent a {
+					color: <?= $hd_color ?>;
+					border-color: <?= $hd_color ?>;
+				}
+			<?php
+		}
+	?>
+
+	@media (max-width:601px) {
+		.modal-content {
+			padding:50px 20px;
+		}
+	}
+
 </style>
 
 <?php
@@ -384,17 +525,15 @@ add_action("wp_footer", function(){
     <script>
 		// Get the modal
 		var modal = document.getElementById("cohortModal");
-
+		
+		// Get the video modal
+		var video_modal = document.getElementById("videoModal");
+		var embedCodeDiv = video_modal.querySelector('.embed-code .fluid-width-video-wrapper');
 		// Get the button that opens the modal
 		var btn = document.getElementById("myBtn");
 
 		// Get the <span> element that closes the modal
 		var span = document.getElementsByClassName("close")[0];
-
-		// When the user clicks on the button, open the modal
-		// btn.onclick = function() {
-		// modal.style.display = "block";
-		// }
 
 		// When the user clicks on <span> (x), close the modal
 		span.onclick = function() {
@@ -405,6 +544,11 @@ add_action("wp_footer", function(){
 		window.onclick = function(event) {
 			if (event.target == modal) {
 				modal.style.display = "none";
+			}
+			if (event.target == video_modal) {
+				video_modal.style.display = "none";
+				//Destory the video so it will stop playing by setting it to blank
+				embedCodeDiv.innerHTML = "&nbsp;";
 			}
 		}
 
@@ -427,6 +571,17 @@ add_action("wp_footer", function(){
 					fill: {color: '#66D697'}
 				  });
 			})
+			
+			$(document).on('click', '.video-btn', function(e) {
+				e.preventDefault();
+				var id = $(this).data('id');
+				var embed_code = $(this).data('embed');
+				console.log(embed_code);
+// 				$('#videoModal .embed-code').html(atob(embed_code));
+				$('#videoModal .embed-code .fluid-width-video-wrapper').html(atob(embed_code));
+				video_modal.style.display = "block";
+			})
+			
 			
 			$(document).on('click', '.sign-commitment', function(e) {
 				e.preventDefault()
@@ -489,6 +644,25 @@ add_action("wp_footer", function(){
 		        }); 
 			})
 		})
+
+		function cohortTabs(evt, indicator) {
+			evt.preventDefault();
+			var i, tabcontent, tablinks;
+			tabcontent = document.getElementsByClassName("tabcontent");
+			for (i = 0; i < tabcontent.length; i++) {
+				tabcontent[i].style.display = "none";
+			}
+			tablinks = document.getElementsByClassName("tablinks");
+			for (i = 0; i < tablinks.length; i++) {
+				tablinks[i].className = tablinks[i].className.replace(" active", "");
+			}
+			document.getElementById(indicator).style.display = "grid";
+			evt.currentTarget.className += " active";
+		}
+
+		jQuery('li.locked a').click(function(e){
+			e.preventDefault();
+		});
     </script>
     <?php
 }, 999 );
