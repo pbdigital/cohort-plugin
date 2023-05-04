@@ -2,7 +2,7 @@
 
 <div class="cohorts-body-right">
 	<div class="cohorts-body-right-content">
-		<h1> Hosts </h1>
+		<h4> Hosts </h4>
 		<ul class="hosts">
 		<?php while( have_rows('hosts') ): the_row(); ?>
 			<?php  ?>

@@ -397,15 +397,13 @@ get_header();
 
 <!-- Video Modal -->
 <div id="videoModal" class="modal">
-
-  <!-- Modal content -->
-  <div class="modal-content">
+	<!-- Modal content -->
+	<div class="modal-content">
 	<span class="close"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 6 6 18M6 6l12 12" stroke="#B3B3B3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-	<div class="embed-code">
-		<div class="fluid-width-video-wrapper" style="padding-top: 380px;"></div>
+		<div class="embed-code">
+			<div class="fluid-width-video-wrapper" style="padding-top: 380px;"></div>
+		</div>
 	</div>
-  </div>
-
 </div>
 
 <style>
@@ -495,21 +493,6 @@ get_header();
 		margin-right:5px;
 	}
 
-	<?php
-		$hd_color = PBD_Cohorts::is_buddyboss_enabled() ? buddyboss_theme_get_option('heading_text_color') : null;
-		if ($hd_color) {
-			?>
-				#cohorts-header h6,
-				#cohorts-body .cohorts-body-top ul li a.active,
-				#cohorts-body .cohorts-body-left-steps li.ended::after,
-				span.morecontent a {
-					color: <?= $hd_color ?>;
-					border-color: <?= $hd_color ?>;
-				}
-			<?php
-		}
-	?>
-
 	@media (max-width:601px) {
 		.modal-content {
 			padding:50px 20px;
@@ -523,12 +506,14 @@ add_action("wp_footer", function(){
     ?>
     
     <script>
+		const fillColor = '<?= PBD_Cohorts::is_buddyboss_enabled() ? buddyboss_theme_get_option('header_links_hover') : '#66D697';?>';
 		// Get the modal
 		var modal = document.getElementById("cohortModal");
 		
 		// Get the video modal
 		var video_modal = document.getElementById("videoModal");
 		var embedCodeDiv = video_modal.querySelector('.embed-code .fluid-width-video-wrapper');
+		
 		// Get the button that opens the modal
 		var btn = document.getElementById("myBtn");
 
@@ -545,6 +530,7 @@ add_action("wp_footer", function(){
 			if (event.target == modal) {
 				modal.style.display = "none";
 			}
+
 			if (event.target == video_modal) {
 				video_modal.style.display = "none";
 				//Destory the video so it will stop playing by setting it to blank
@@ -568,7 +554,7 @@ add_action("wp_footer", function(){
 					size: 40,
 					lineCap: 'round',
 					emptyFill: '#E7E7E8',
-					fill: {color: '#66D697'}
+					fill: {color: fillColor}
 				  });
 			})
 			
@@ -576,8 +562,7 @@ add_action("wp_footer", function(){
 				e.preventDefault();
 				var id = $(this).data('id');
 				var embed_code = $(this).data('embed');
-				console.log(embed_code);
-// 				$('#videoModal .embed-code').html(atob(embed_code));
+
 				$('#videoModal .embed-code .fluid-width-video-wrapper').html(atob(embed_code));
 				video_modal.style.display = "block";
 			})
@@ -643,7 +628,7 @@ add_action("wp_footer", function(){
 		            }
 		        }); 
 			})
-		})
+		});
 
 		function cohortTabs(evt, indicator) {
 			evt.preventDefault();

@@ -1,6 +1,5 @@
 body{
     width: 100%;
-    font-family: 'Montserrat';
 }
 #secondary, footer, .pbd-custom-footer {
     display: none; 
@@ -35,7 +34,6 @@ body.buddypress article.page>.entry-header .entry-title {
   margin-bottom: 20px;
 }
 .thread-header .cbtn {
-  font-family: 'Montserrat';
   font-style: normal;
   font-weight: 700;
   font-size: 14px;
@@ -56,7 +54,6 @@ body.buddypress article.page>.entry-header .entry-title {
   color: #ffffff;
 }
 .cust-group-title {
-  font-family: 'Open Sans';
   font-style: normal;
   font-weight: 600;
   font-size: 24px;
@@ -69,7 +66,6 @@ body.buddypress article.page>.entry-header .entry-title {
 }
 .cust-post-text {
   display: block;
-  font-family: 'Open Sans';
   font-style: normal;
   font-weight: 600;
   font-size: 18px;
@@ -112,7 +108,6 @@ a.activity-time-since {
 }
 .activity-header > p, 
 .activity-header p a{
-    font-family: 'Montserrat';
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
@@ -123,7 +118,6 @@ a.activity-time-since {
     font-weight: 600;
 }
 .activity-header .activity-date a, .activity-header .activity-date span {
-    font-family: 'Montserrat';
     font-style: normal;
     font-weight: 400;
     font-size: 14px;
@@ -177,7 +171,6 @@ footer{display:none}
     margin-top: 12px;
 }
 .activity-list .activity-item .activity-content .activity-inner {
-    font-family: 'Montserrat';
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
@@ -187,7 +180,6 @@ footer{display:none}
 .activity-content .activity-state,
 .activity-content .activity-state a,
 .activity-content .activity-state span{
-    font-family: 'Montserrat';
     font-style: normal;
     font-weight: 400;
     font-size: 14px;
@@ -215,7 +207,6 @@ footer{display:none}
     padding: 30px;
 }
 .activity-comments .acomment-meta .author-name {
-    font-family: 'Montserrat';
     font-style: normal;
     font-weight: 600;
     font-size: 15px;
@@ -223,7 +214,7 @@ footer{display:none}
     color: #000000;
 }
 .buddypress-wrap .activity-comments {
-    font-family: 'Montserrat';
+
     font-style: normal;
     font-weight: 400;
     font-size: 14px;
@@ -232,7 +223,6 @@ footer{display:none}
 }
 .activity-comments [contentEditable=true]:empty:not(:focus):before{
     content:'Write your comment' !important;
-    font-family: 'Montserrat';
     font-style: normal;
     font-weight: 400;
     font-size: 14px;
@@ -244,7 +234,6 @@ footer{display:none}
     padding-bottom: 6px;
 }
 .buddypress-wrap .activity-comments .acomment-content p{
-    font-family: 'Montserrat';
     font-style: normal;
     font-weight: 400;
     font-size: 15px;
@@ -299,7 +288,6 @@ body #buddypress .bp-list .activity-comments .bp-generic-meta.groups-meta.action
     padding: 6px;
 }
 body #buddypress .bp-list .activity-comments .bp-generic-meta.groups-meta.action a{
-    font-family: 'Montserrat';
     font-style: normal;
     font-weight: 400;
     font-size: 14px;
@@ -311,7 +299,6 @@ body #buddypress .bp-list .activity-comments .bp-generic-meta.groups-meta.action
   display: none;
 }
 .group_name_pill {
-    font-family: 'Montserrat';
     font-style: normal;
     font-weight: 500;
     font-size: 12px !important;
@@ -364,7 +351,6 @@ body #buddypress .bp-list .activity-comments .bp-generic-meta.groups-meta.action
     margin-top: 12px;
     margin-right: 10px;
     /* border: 1px solid #FF6600; */
-    font-family: 'Montserrat';
     font-style: normal;
     font-weight: 600;
     font-size: 13px;
@@ -373,7 +359,6 @@ body #buddypress .bp-list .activity-comments .bp-generic-meta.groups-meta.action
     color: #FFFFFF;
 }
 #buddypress button.ac-reply-cancel {
-    font-family: 'Montserrat';
     font-style: normal;
     font-weight: 400;
     font-size: 14px;

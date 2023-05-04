@@ -1,16 +1,3 @@
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap");
-@font-face {
-  font-family: "SF Pro Regular";
-  src: url("../../fonts/SF-Pro-Text-Regular.ttf");
-}
-@font-face {
-  font-family: "SF Pro Medium";
-  src: url("../../fonts/SF-Pro-Text-Medium.ttf");
-}
-@font-face {
-  font-family: "SF Pro Bold";
-  src: url("../../fonts/SF-Pro-Text-Bold.ttf");
-}
 .single-cohort #content {
   padding-left: 0;
   padding-right: 0;
@@ -66,8 +53,6 @@ body {
 }
 
 #cohorts-header h6 {
-  /*   font-family: 'SF Pro Medium'; */
-  font-family: "Montserrat";
   font-style: normal;
   font-weight: 500;
   font-size: 10px;
@@ -82,7 +67,6 @@ body {
 }
 
 #cohorts-header .cohorts-header-right-mid h1 {
-  font-family: "Montserrat";
   font-style: normal;
   font-weight: 700;
   font-size: 20px;
@@ -129,14 +113,14 @@ body {
 }
 
 #cohorts-body .cohorts-body-top ul li a {
-  font-family: "Montserrat";
   font-style: normal;
   font-weight: 700;
   font-size: 16px;
   line-height: 20px;
   color: #000000;
-  border-bottom: 5px solid #c011d7;
-  padding-bottom: 15px;
+  color: var(--bb-header-links, #000000);
+  border-bottom: 5px solid;
+  padding-bottom: 10px;
   display: inline-block;
 }
 
@@ -144,6 +128,11 @@ body {
   display: grid;
   grid-template-columns: 1fr 350px;
   grid-gap: 30px;
+}
+
+#cohorts-body #Discussion.cohorts-body-content,
+#cohorts-body #Members.cohorts-body-content {
+  grid-template-columns: 1fr;
 }
 
 #cohorts-body .cohorts-body-left {
@@ -157,6 +146,13 @@ body {
 #cohorts-body .cohorts-body-left-top {
   padding-left: 60px;
   position: relative;
+}
+
+#cohorts-header h6,
+#cohorts-body .cohorts-body-top ul li a.active,
+#cohorts-body .cohorts-body-left-steps li.ended::after,
+span.morecontent a {
+  color: var(--bb-header-links-hover, #4D5E70);
 }
 
 .progressbar.started {
@@ -210,11 +206,7 @@ body {
 }
 
 #cohorts-body .cohorts-body-left-steps h3 {
-  font-family: "Montserrat";
   font-style: normal;
-  font-weight: 600;
-  font-size: 14px;
-  line-height: 20px;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: #000000;
@@ -236,18 +228,12 @@ body {
 
 #cohorts-body .cohorts-body-left-steps-contents-main h2 {
   margin: 0 0 10px;
-  font-size: 16px;
-  line-height: 19px;
   color: #000000;
-  /*   font-family: 'SF Pro Bold'; */
 }
 
 #cohorts-body .cohorts-body-left-steps-contents-main p {
   font-weight: 400;
-  font-size: 14px;
-  line-height: 17px;
   color: #393e41;
-  /*   font-family: 'SF Pro Regular'; */
   margin: 0 0 10px;
 }
 
@@ -275,7 +261,6 @@ body {
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: #aaaaaa;
-  /*   font-family: 'SF Pro Regular'; */
   position: relative;
   padding-left: 25px;
   padding-top: 2px;
@@ -308,11 +293,8 @@ body {
 }
 
 #cohorts-body .cohorts-body-contents-type-details-txt h2 {
-  font-size: 16px;
-  line-height: 19px;
   text-transform: capitalize;
   color: #000000;
-  /*   font-family: 'SF Pro Bold'; */
   margin: 0 0 10px;
 }
 
@@ -327,11 +309,8 @@ body {
 
 #cohorts-body .cohorts-body-contents-type-details-txt p {
   margin: 0;
-  font-family: "Montserrat";
   font-style: normal;
   font-weight: 400;
-  font-size: 14px;
-  line-height: 24px;
   color: #000000;
 }
 
@@ -344,7 +323,6 @@ body {
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: #aaaaaa;
-  /*   font-family: 'SF Pro Regular'; */
   padding-left: 25px;
   padding-top: 2px;
   padding-right: 20px;
@@ -383,7 +361,6 @@ body {
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: #aaaaaa;
-  /*   font-family: 'SF Pro Regular'; */
   margin: 0;
 }
 
@@ -473,7 +450,6 @@ progress[value]::-webkit-progress-value {
 
 .cohorts-body-contents-type-details-bot-right a {
   display: block;
-  font-family: "Montserrat";
   font-style: normal;
   font-weight: 700;
   font-size: 14px;
@@ -527,10 +503,7 @@ progress[value]::-webkit-progress-value {
 }
 
 #cohorts-body .cohorts-body-right .cohorts-body-right-content h1 {
-  font-size: 20px;
-  line-height: 24px;
   color: #000000;
-  /*   font-family: 'SF Pro Bold'; */
   margin-bottom: 20px;
 }
 
@@ -555,7 +528,6 @@ progress[value]::-webkit-progress-value {
   padding-left: 10px;
   justify-content: center;
   flex-direction: column;
-  font-family: "Montserrat";
   font-style: normal;
   font-weight: 600;
   font-size: 15px;
@@ -566,7 +538,6 @@ progress[value]::-webkit-progress-value {
 
 #cohorts-body .cohorts-body-right .hosts-details .hosts-namepos p {
   margin: 8px 0 0 0;
-  font-family: "Montserrat";
   font-style: normal;
   font-weight: 400;
   font-size: 14px;
@@ -603,7 +574,6 @@ progress[value]::-webkit-progress-value {
   margin: 0;
   border: 1px solid #e0dfdb;
   border-radius: 6px;
-  /*   font-family: 'SF Pro Medium'; */
   font-style: normal;
   font-weight: 500;
   font-size: 10px;
@@ -621,7 +591,6 @@ progress[value]::-webkit-progress-value {
   text-align: center;
   text-transform: uppercase;
   color: #000000;
-  /*   font-family: 'SF Pro Bold'; */
 }
 
 #cohorts-body .cohorts-body-left-steps > li > canvas {
@@ -765,7 +734,6 @@ progress[value]::-webkit-progress-value {
   }
 }
 #cohortModal .modal-title {
-  font-family: "Montserrat";
   font-style: normal;
   font-weight: 700;
   font-size: 20px;
@@ -774,7 +742,6 @@ progress[value]::-webkit-progress-value {
   margin-bottom: 16px;
 }
 #cohortModal .modal-description {
-  font-family: "Montserrat";
   font-style: normal;
   font-weight: 400;
   font-size: 14px;
@@ -829,7 +796,6 @@ progress[value]::-webkit-progress-value {
   border-color: #2cff8a;
 }
 #cohortModal #soc-form .checkbox-section label {
-  font-family: "Montserrat";
   font-style: normal;
   font-weight: 400;
   font-size: 14px;
@@ -840,7 +806,6 @@ progress[value]::-webkit-progress-value {
   cursor: pointer;
 }
 #cohortModal #soc-form .form-group > label {
-  font-family: "Montserrat";
   font-style: normal;
   font-weight: 700;
   font-size: 14px;
@@ -860,7 +825,6 @@ progress[value]::-webkit-progress-value {
   height: 48px;
   background: #c011d7;
   border-radius: 100px;
-  font-family: "Montserrat";
   font-style: normal;
   font-weight: 700;
   font-size: 18px;
@@ -879,7 +843,6 @@ progress[value]::-webkit-progress-value {
   padding: 18px 20px;
 }
 .single-cohort .top-heading h4 {
-  font-family: "Montserrat";
   font-style: normal;
   font-weight: 700;
   font-size: 20px;
@@ -895,15 +858,12 @@ progress[value]::-webkit-progress-value {
 .single-cohort .cohorts-body-right-content {
   padding: 0 !important;
 }
-.single-cohort .cohorts-body-right-content h1 {
-  font-family: "Montserrat";
+.single-cohort .cohorts-body-right-content h4 {
   font-style: normal;
   font-weight: 700;
-  font-size: 20px !important;
-  line-height: 24px !important;
   color: #ffffff !important;
   padding: 18px 20px;
-  background: #000000;
+  background: var(--bb-primary-button-background-regular, #000000);
   border-radius: 10px 10px 0px 0px;
   margin-bottom: 30px !important;
   margin-top: 0;
@@ -913,6 +873,9 @@ progress[value]::-webkit-progress-value {
 }
 .single-cohort .cohorts-body-right-content ul.hosts a {
   text-decoration: none;
+}
+.single-cohort .cohort-dicussion-wrapper > iframe {
+  border: 0;
 }
 
 /*# sourceMappingURL=main.css.map */

@@ -14,7 +14,7 @@ jQuery(function($) {
             var c = content.substr(0, showChar);
             var h = content.substr(showChar, content.length - showChar);
 
-            var html = c + '<span class="moreellipses">' + ellipsestext+ '&nbsp;</span><span class="morecontent"><span>' + h + '</span><a href="" class="morelink">' + moretext + '</a></span>';
+            var html = c + '<span class="moreellipses">' + ellipsestext+ '&nbsp;</span><span class="morecontent"><span>' + h + '</span><a href="" class="morelink">' + lesstext + '</a></span>';
 
             $(this).html(html);
             $(this).slideDown();
@@ -25,10 +25,10 @@ jQuery(function($) {
     $(".morelink").click(function(){
         if($(this).hasClass("less")) {
             $(this).removeClass("less");
-            $(this).html(moretext);
+            $(this).html(lesstext);
         } else {
             $(this).addClass("less");
-            $(this).html(lesstext);
+            $(this).html(moretext);
         }
         $(this).parent().prev().toggle();
         $(this).prev().toggle();
