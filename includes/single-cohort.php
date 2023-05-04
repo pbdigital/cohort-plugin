@@ -139,7 +139,7 @@ get_header();
 								<h3><?php the_sub_field('section_title'); ?></h3>
 								<div class="cohorts-body-left-steps-contents">
 									<div class="cohorts-body-left-steps-contents-main">
-										<h2> <?php the_sub_field('title'); ?> </h2>
+										<h4> <?php the_sub_field('title'); ?> </h4>
 										<p> <?php the_sub_field('description'); ?> </p>
 										<ul>
 											<?php if (!get_sub_field('hide_hours_indicator')){ ?>
@@ -227,7 +227,7 @@ get_header();
 															?>
 														</div>
 														<div class="cohorts-body-contents-type-details-txt">
-															<h2> <?php echo $post_title ?> </h2>
+															<h4> <?php echo $post_title ?> </h4>
 															<p> <?php echo  $post_sub_title ?> </p>
 															<div class="cohorts-body-contents-type-details-bot">
 																<div class="cohorts-body-contents-type-details-bot-left">
