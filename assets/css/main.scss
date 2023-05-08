@@ -2,12 +2,6 @@
     padding-left: 0;
     padding-right: 0;
 }
-.single-cohort #content .container {
-    max-width: 100%;
-    padding-left: 0;
-    padding-right: 0;
-}
-
 .single-cohort #content .container .bb-grid.site-content-grid {
     display: block;
 }
@@ -21,18 +15,19 @@ body {
     margin: 0;
 }
 .container {
-    max-width: 1180px;
+    max-width: var(--cohort-container-width);
     margin: 0 auto;
     width: 100%;
 }
 
 #cohorts-header {
     box-shadow: 0px 0px 3px rgba(19, 46, 75, 0.1);
-    padding: 25px 0;
+    padding: 40px 20px;
     background-color: #fff;
 }
 #cohorts-header .cohorts-header-content {
     display: flex;
+    column-gap: 20px;
 }
 #cohorts-header .cohorts-header-left img {
     max-width: 70px;
@@ -41,7 +36,6 @@ body {
 }
 #cohorts-header .cohorts-header-right {
     display: flex;
-    padding-left: 20px;
     justify-content: center;
     flex-direction: column;
 }
@@ -73,11 +67,11 @@ body {
 }
 #cohorts-header h6 .range {
     padding: 0;
-    color: #c011d7;
+    color: var(--cohort-progress-color);
 }
 #cohorts-body {
-    padding: 40px 0;
-    background-color: #faf9f7;
+    padding: 40px 20px;
+    background-color: var(--cohort-body-bg-color);
 }
 #cohorts-body .cohorts-body-top {
     padding-bottom: 60px;
@@ -134,6 +128,16 @@ body {
 #cohorts-body .cohorts-body-left-steps li.ended::after,
 span.morecontent a {
     color: var(--bb-header-links-hover, #4D5E70);
+}
+
+.more {
+    &:not(.less) .moreellipses {
+        display: none;
+    }
+
+    .morecontent a  {
+        margin-left: 5px;
+    }
 }
 
 .progressbar.started {
@@ -219,7 +223,7 @@ span.morecontent a {
     position: relative;
 }
 #cohorts-body .cohorts-body-left-steps li.ended::after {
-    border-color: #c011d7;
+    border-color: var(--cohort-progress-color);
 }
 #cohorts-body .cohorts-body-left-steps-contents-main ul li {
     display: inline-block;
@@ -552,6 +556,95 @@ progress[value]::-webkit-progress-value {
     opacity: 0;
 }
 
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 10000; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background: rgba(0, 0, 0, 0.5);
+}
+
+/* Modal Content/Box */
+.modal-content {
+    background-color: #fefefe;
+    margin: 10% auto 0 !important;
+    border: 1px solid #888;
+    width: calc(100% - 40px);
+    max-width: 740px;
+    padding:57px 50px;
+    height:auto;
+}
+
+/* The Close Button */
+.close {
+    position:absolute;
+    cursor:pointer;
+    top:20px;
+    right:20px;
+
+}
+.close svg {
+    width:auto;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.checkbox-label {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0px;
+    gap: 16px;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;
+    color: #393E41;
+}
+
+.checkbox-label input {
+    width: 20px;
+    height: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 10px;
+
+}
+
+li.locked div {
+    opacity: 0.5;
+}
+
+li.locked .progressbar {
+}
+
+li.locked h3:before {
+    content: '\eecc';
+    font-weight: 300;
+    font-family: bb-icons;
+    font-size: 18px;
+    margin-right:5px;
+}
+
+@media (max-width:601px) {
+    .modal-content {
+        padding:50px 20px;
+    }
+}
+
 @media only screen and (max-width: 1200px) {
     .single-cohort #content .container .bb-grid.site-content-grid .container {
         max-width: 980px;
@@ -667,11 +760,24 @@ progress[value]::-webkit-progress-value {
     #cohorts-body .cohorts-body-top {
         padding-bottom: 30px;
     }
+    #cohorts-body .cohorts-body-contents-type-details {
+        flex-direction: column;
+        
+        .cohorts-body-contents-type-details-bot-right {
+            flex-direction: column;
+            a {
+                width: auto;
+                max-width: 100%;
+                display: block;
+                min-width: 100px;
+            }
+        }
+    }
     #cohorts-body .cohorts-body-contents-type-details-bot {
         margin-top: 20px;
     }
     #cohorts-body .cohorts-body-contents-type-details-txt {
-        padding-left: 15px;
+        padding-left: 0;
     }
     #cohorts-body .cohorts-body-contents-type-details-bot-left {
         margin-bottom: 20px;
@@ -794,7 +900,7 @@ progress[value]::-webkit-progress-value {
         input[type="submit"] {
             width: 240px;
             height: 48px;
-            background: #c011d7;
+            background: var(--cohort-progress-color);
             border-radius: 100px;
             font-style: normal;
             font-weight: 700;

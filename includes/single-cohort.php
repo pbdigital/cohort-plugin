@@ -7,367 +7,370 @@
 
 get_header();
 ?>
-<div id="cohorts-header">
-	<div class="container">
-		<div class="cohorts-header-content">
-			<div class="cohorts-header-left">
+<div class="cohorts-main-container">
+	<div id="cohorts-header">
+		<div class="container">
+			<div class="cohorts-header-content">
 				<?php if( get_field('icon') ): ?>
-					<img src="<?php the_field('icon'); ?>" />
+					<div class="cohorts-header-left">
+						<img src="<?php the_field('icon'); ?>" />
+					</div>
 				<?php endif; ?>
-			</div>
-			<div class="cohorts-header-right">
-				<div class="cohorts-header-right-mid">
-					<?php
-						$now = new DateTime();
-						$start = new DateTime(get_field('start_date'));
-						if ($start > $now && get_field('length') && $date_diff->d > 0) {
-							$date_diff = $now->diff($start);
-							$date_diff = ($date_diff->d > 1) ? $date_diff->d.' Days' : $date_diff->d.' Day';
-							echo '<h6>Begins in ' . $date_diff . '</h6>';
-						}
-						echo '<h1>' . (get_field('title') ? get_field('title') : get_the_title()) . '</h1>';
-					?>
-
-				</div>
-
-				<div class="cohorts-header-right-bot">
-					<?php if( get_field('length') ): ?>
+				
+				<div class="cohorts-header-right">
+					<div class="cohorts-header-right-mid">
 						<?php
 							$now = new DateTime();
 							$start = new DateTime(get_field('start_date'));
-							$end = new DateTime(get_field('end_date'));
-							$date_diff = $now->diff($start);
-							if ( ($start->format('m') == $end->format('m')) && ($start->format('y') == $end->format('y')) ) {
-								$schedule = $start->format('F d') . ' - ' . $end->format('d Y');
-							} else {
-								$schedule = $start->format('F d Y') . ' - ' . $end->format('F d Y');
+							if ($start > $now && get_field('length') && $date_diff->d > 0) {
+								$date_diff = $now->diff($start);
+								$date_diff = ($date_diff->d > 1) ? $date_diff->d.' Days' : $date_diff->d.' Day';
+								echo '<h6>Begins in ' . $date_diff . '</h6>';
 							}
+							echo '<h1>' . (get_field('title') ? get_field('title') : get_the_title()) . '</h1>';
 						?>
-						<h5><?php the_field('length'); ?> <span>•</span> <?php echo $schedule; ?> </h5>
-					<?php endif; ?>
-					<?php
-					
-					?>
-				</div>
-				<div class="cohorts-header-right-top">
-					<?php if( get_field('description') ): ?>
+
+					</div>
+
+					<div class="cohorts-header-right-bot">
+						<?php if( get_field('length') ): ?>
+							<?php
+								$now = new DateTime();
+								$start = new DateTime(get_field('start_date'));
+								$end = new DateTime(get_field('end_date'));
+								$date_diff = $now->diff($start);
+								if ( ($start->format('m') == $end->format('m')) && ($start->format('y') == $end->format('y')) ) {
+									$schedule = $start->format('F d') . ' - ' . $end->format('d Y');
+								} else {
+									$schedule = $start->format('F d Y') . ' - ' . $end->format('F d Y');
+								}
+							?>
+							<h5><?php the_field('length'); ?> <span>•</span> <?php echo $schedule; ?> </h5>
+						<?php endif; ?>
 						<?php
-							$now = new DateTime();
-							$start_date = new DateTime(get_field('start_date'));
-							$difference = $now->diff($start_date);
+						
 						?>
-						<?php
-						$text = get_field('description');
-						$text = str_replace('<p>', '',  $text); // Remove <p> tags
-						$text = str_replace('</p>', '<br><br>', $text); // Replace </p> with <br>
-						?>
-						<div class="more" style="display: none"><?php echo $text; ?> <?= $now > $start_date ? null : '<span>•</span>  <span class="range"> Begins in '. $difference->d .' days </span>' ?></div>
-					<?php endif; ?>
+					</div>
+					<div class="cohorts-header-right-top">
+						<?php if( get_field('description') ): ?>
+							<?php
+								$now = new DateTime();
+								$start_date = new DateTime(get_field('start_date'));
+								$difference = $now->diff($start_date);
+							?>
+							<?php
+							$text = get_field('description');
+							$text = str_replace('<p>', '',  $text); // Remove <p> tags
+							$text = str_replace('</p>', '<br><br>', $text); // Replace </p> with <br>
+							?>
+							<div class="more" style="display: none"><?php echo $text; ?> <?= $now > $start_date ? null : '<span>•</span>  <span class="range"> Begins in '. $difference->d .' days </span>' ?></div>
+						<?php endif; ?>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-</div>
-<div id="cohorts-body">
-	<div class="container">
-		<div class="cohorts-body-top">
-			<ul>
-				<li><a href="#" class="tablinks active" onclick="cohortTabs(event, 'Overview')"> Overview </a></li>
+	<div id="cohorts-body">
+		<div class="container">
+			<div class="cohorts-body-top">
+				<ul>
+					<li><a href="#" class="tablinks active" onclick="cohortTabs(event, 'Overview')"> Overview </a></li>
 
-				<?php if (PBD_Cohorts::is_buddyboss_activity_enabled() && get_field('show_discussion_tab')): ?>
-					<li><a href="#" class="tablinks" onclick="cohortTabs(event, 'Discussion')"> <?php echo get_field('discussion_tab_label');?> </a></li>
-				<?php endif; ?>
+					<?php if (PBD_Cohorts::is_buddyboss_activity_enabled() && get_field('show_discussion_tab')): ?>
+						<li><a href="#" class="tablinks" onclick="cohortTabs(event, 'Discussion')"> <?php echo get_field('discussion_tab_label');?> </a></li>
+					<?php endif; ?>
 
-				<?php if (PBD_Cohorts::is_buddyboss_group_enabled() && get_field('show_members_tab')): ?>
-					<li><a href="#" class="tablinks" onclick="cohortTabs(event, 'Members')"> <?php echo get_field('members_tab_label');?> </a></li>
-				<?php endif; ?>
-			</ul>
-		</div>
-		<div id="Overview" class="cohorts-body-content tabcontent">
-			<div class="cohorts-body-left">
-				<div class="cohorts-body-left-top">
-					<?php if( have_rows('steps') ): ?>
-						<ul class="cohorts-body-left-steps">
-						<?php while( have_rows('steps') ): the_row(); ?>
-							<?php
-								$now = new DateTime();
-								$step_start_date = new DateTime(get_sub_field('start_date'));
-								$step_end_date = new DateTime(get_sub_field('end_date'));
+					<?php if (PBD_Cohorts::is_buddyboss_group_enabled() && get_field('show_members_tab')): ?>
+						<li><a href="#" class="tablinks" onclick="cohortTabs(event, 'Members')"> <?php echo get_field('members_tab_label');?> </a></li>
+					<?php endif; ?>
+				</ul>
+			</div>
+			<div id="Overview" class="cohorts-body-content tabcontent">
+				<div class="cohorts-body-left">
+					<div class="cohorts-body-left-top">
+						<?php if( have_rows('steps') ): ?>
+							<ul class="cohorts-body-left-steps">
+							<?php while( have_rows('steps') ): the_row(); ?>
+								<?php
+									$now = new DateTime();
+									$step_start_date = new DateTime(get_sub_field('start_date'));
+									$step_end_date = new DateTime(get_sub_field('end_date'));
 
-								$locked = false;
-								if ($now < $step_start_date) {
-									$locked = true;
-								}
-
-								$total_hours = 0;
-								$total_lessons = 0;
-								$total_events = 0;
-								$total_completed = 0;
-								$total_tasks = 0;
-								$types = get_sub_field('type');
-								// print_r($types);
-								foreach($types as $type) {
-									if ($type['acf_fc_layout'] == 'course') {
-										$total_hours += (int)$type['length'];
-										$total_lessons += learndash_get_course_steps_count($type['course']->ID);
-
-
-										$user_progress = learndash_user_get_course_progress( get_current_user_id(),  $type['course']->ID );
-										$total_completed += $user_progress['completed'];
-
+									$locked = false;
+									if ($now < $step_start_date) {
+										$locked = true;
 									}
-									else if ($type['acf_fc_layout'] == 'event') {
-										$total_events += 1;
+
+									$total_hours = 0;
+									$total_lessons = 0;
+									$total_events = 0;
+									$total_completed = 0;
+									$total_tasks = 0;
+									$types = get_sub_field('type');
+									// print_r($types);
+									foreach($types as $type) {
+										if ($type['acf_fc_layout'] == 'course') {
+											$total_hours += (int)$type['length'];
+											$total_lessons += learndash_get_course_steps_count($type['course']->ID);
+
+
+											$user_progress = learndash_user_get_course_progress( get_current_user_id(),  $type['course']->ID );
+											$total_completed += $user_progress['completed'];
+
+										}
+										else if ($type['acf_fc_layout'] == 'event') {
+											$total_events += 1;
+										}
+										else if ($type['acf_fc_layout'] == 'simple_link ') {
+											$total_tasks += 1;
+										}
 									}
-									else if ($type['acf_fc_layout'] == 'simple_link ') {
-										$total_tasks += 1;
+
+									$percent_total = ($total_completed) ? round($total_completed / $total_lessons * 100, 0) : 0 ;
+									
+									//Instead of basing hours on courses, admin can specify this value
+									if (get_sub_field('hours') > 0){
+										$total_hours = get_sub_field('hours');
 									}
-								}
+									// If $percent_total is not already set and $now is greater than $step_end_date,
+									$percent_total = (!$percent_total && $now > $step_end_date) ? 100 : null;
 
-								$percent_total = ($total_completed) ? round($total_completed / $total_lessons * 100, 0) : 0 ;
-								
-								//Instead of basing hours on courses, admin can specify this value
-								if (get_sub_field('hours') > 0){
-									$total_hours = get_sub_field('hours');
-								}
-								// If $percent_total is not already set and $now is greater than $step_end_date,
-								$percent_total = (!$percent_total && $now > $step_end_date) ? 100 : null;
+								?>
+								<li class="<?= ($now > $step_end_date) ? 'ended' : null ?> <?= $locked ? 'locked' : '' ?>" data-progress="<?= $percent_total; ?>">
+									<div class="progressbar <?= ($now >= $step_start_date) ? 'started' : null ?>" data-progress="<?= $percent_total; ?>"> </div>
+									<h3><?php the_sub_field('section_title'); ?></h3>
+									<div class="cohorts-body-left-steps-contents">
+										<div class="cohorts-body-left-steps-contents-main">
+											<h4> <?php the_sub_field('title'); ?> </h4>
+											<p> <?php the_sub_field('description'); ?> </p>
+											<ul>
+												<?php if (!get_sub_field('hide_hours_indicator')){ ?>
+												<li> <img src="<?=  PBD_CO_URL . '/assets/images/timer.png' ?>"> <?= $total_hours ?> hours </li>
+												<?php } ?>
+												<?php if (!get_sub_field('hide_lessons_indicator')){ ?>
+												<li> <img src="<?=  PBD_CO_URL . '/assets/images/player-icon.png' ?>"> <?= $total_lessons ?> lessons </li>
+												<?php } ?>
+												<?php if (!get_sub_field('hide_events_indicator')){ ?>
+												<li> <img src="<?=  PBD_CO_URL . '/assets/images/calendar-icon.png' ?>"> <?= $total_events ?> event </li>
+												<?php } ?>
+											</ul>
+										</div>
+										<div class="cohorts-body-left-steps-contents-type">
+											<?php if( have_rows('type') ): ?>
+												<ul class="cohorts-body-left-steps-contents-typesec">
+												<?php while( have_rows('type') ): the_row(); ?>
+													<?php
+														
+														$row_layout = get_row_layout();
+														
+														$post_object = ( $row_layout == 'course' ) ? get_sub_field('course') : get_sub_field('event');
 
-							?>
-							<li class="<?= ($now > $step_end_date) ? 'ended' : null ?> <?= $locked ? 'locked' : '' ?>" data-progress="<?= $percent_total; ?>">
-								<div class="progressbar <?= ($now >= $step_start_date) ? 'started' : null ?>" data-progress="<?= $percent_total; ?>"> </div>
-								<h3><?php the_sub_field('section_title'); ?></h3>
-								<div class="cohorts-body-left-steps-contents">
-									<div class="cohorts-body-left-steps-contents-main">
-										<h4> <?php the_sub_field('title'); ?> </h4>
-										<p> <?php the_sub_field('description'); ?> </p>
-										<ul>
-											<?php if (!get_sub_field('hide_hours_indicator')){ ?>
-											<li> <img src="<?=  PBD_CO_URL . '/assets/images/timer.png' ?>"> <?= $total_hours ?> hours </li>
-											<?php } ?>
-											<?php if (!get_sub_field('hide_lessons_indicator')){ ?>
-											<li> <img src="<?=  PBD_CO_URL . '/assets/images/player-icon.png' ?>"> <?= $total_lessons ?> lessons </li>
-											<?php } ?>
-											<?php if (!get_sub_field('hide_events_indicator')){ ?>
-											<li> <img src="<?=  PBD_CO_URL . '/assets/images/calendar-icon.png' ?>"> <?= $total_events ?> event </li>
-											<?php } ?>
-										</ul>
-									</div>
-									<div class="cohorts-body-left-steps-contents-type">
-										<?php if( have_rows('type') ): ?>
-											<ul class="cohorts-body-left-steps-contents-typesec">
-											<?php while( have_rows('type') ): the_row(); ?>
-												<?php
-													
-													$row_layout = get_row_layout();
-													
-													$post_object = ( $row_layout == 'course' ) ? get_sub_field('course') : get_sub_field('event');
-
-													if ($row_layout == 'course')
-														$post_object = get_sub_field('course');
-													else if ($row_layout == 'event')
-														$post_object = get_post(get_sub_field('event'));
-													else if ($row_layout == 'statement_of_commitment')
-														$post_object = get_sub_field('soc');
-													else if ($row_layout == 'simple_link')
-														$post_object = get_sub_field('simple_link');
-													else if ($row_layout == 'document')
-														$post_object = get_sub_field('document');
-													else if ($row_layout == 'call_recording')
-														$post_object = get_sub_field('call_recording');
-													else if ($row_layout == 'video')
-														$post_object = get_sub_field('video');
-													else if ($row_layout == 'introduce_yourself')
-													$post_object = get_sub_field('introduce_yourself');
-													if ($row_layout == 'simple_link') {
-														$post_title = get_sub_field('title');
-														$post_sub_title = get_sub_field('description');
-													} else {
-														$post_title = get_sub_field('title') ? get_sub_field('title') : $post_object->post_title;
-														$post_sub_title = get_sub_field('description') ? get_sub_field('description') : $post_object->post_excerpt;
-													}
-													
-												?>
-												<li>
-													<div class="cohorts-body-contents-type-details">
-														<div class="cohorts-body-contents-type-details-img">
-															<?php
-																if ($row_layout == 'course') {
-																	?> <img src="<?=  PBD_CO_URL . '/assets/images/course-icon.png' ?>"> <?php
-																} 
-																else if ($row_layout == 'statement_of_commitment') {
-																	$soc_user = get_user_meta(get_current_user_id(), 'soc_'. $post_object->ID, true);
-																	if ($soc_user) {
-																		?>
-																			<div class="progressbar progressbar-soc started" data-progress="0"> </div>
-																		<?php
-																	} else {
-																		?><img src="<?=  PBD_CO_URL . '/assets/images/soc-icon.png' ?>"><?php
-																	}
-																} else if ($row_layout == 'simple_link') {
-																	?> <img src="<?=  PBD_CO_URL . '/assets/images/link-icon.png' ?>"> <?php
-																} else if ($row_layout == 'document') {
-																	?> <img src="<?=  PBD_CO_URL . '/assets/images/document-icon.png' ?>"> <?php
-																}
-																else if ($row_layout == 'call_recording') {
-																	?> <img src="<?=  PBD_CO_URL . '/assets/images/video-icon.png' ?>"> <?php
-																}
-																else if ($row_layout == 'video') {
-																	?> <img src="<?=  PBD_CO_URL . '/assets/images/video-icon.png' ?>"> <?php
-																}
-																else if ($row_layout == 'introduce_yourself') {
-																	?> <img src="<?=  PBD_CO_URL . '/assets/images/introduce-icon.png' ?>"> <?php
-																}
-																else {
-																	$event_month = tribe_get_start_date($post_object->ID, true, 'M');
-																	$event_day = tribe_get_start_date($post_object->ID, true, 'd');
-																	echo "<p> ". $event_month ." <span> ". $event_day ." </span> </p>";
-																	// echo 'here'. $post_object;
-																}
-															?>
-														</div>
-														<div class="cohorts-body-contents-type-details-txt">
-															<h4> <?php echo $post_title ?> </h4>
-															<p> <?php echo  $post_sub_title ?> </p>
-															<div class="cohorts-body-contents-type-details-bot">
-																<div class="cohorts-body-contents-type-details-bot-left">
-																	<?php
-																		if ($row_layout == 'course') {
-																			$user_progress = learndash_user_get_course_progress( get_current_user_id(),  $post_object->ID );
-																			$total_lessons = $user_progress['total'];
-																			$completed = $user_progress['completed'];
-
-																			if ($completed) {
-																				$percentage = round($completed / $total_lessons * 100, 0);
-																			} else {
-																				$percentage = 0;
-																			}
-																			
-
+														if ($row_layout == 'course')
+															$post_object = get_sub_field('course');
+														else if ($row_layout == 'event')
+															$post_object = get_post(get_sub_field('event'));
+														else if ($row_layout == 'statement_of_commitment')
+															$post_object = get_sub_field('soc');
+														else if ($row_layout == 'simple_link')
+															$post_object = get_sub_field('simple_link');
+														else if ($row_layout == 'document')
+															$post_object = get_sub_field('document');
+														else if ($row_layout == 'call_recording')
+															$post_object = get_sub_field('call_recording');
+														else if ($row_layout == 'video')
+															$post_object = get_sub_field('video');
+														else if ($row_layout == 'introduce_yourself')
+														$post_object = get_sub_field('introduce_yourself');
+														if ($row_layout == 'simple_link') {
+															$post_title = get_sub_field('title');
+															$post_sub_title = get_sub_field('description');
+														} else {
+															$post_title = get_sub_field('title') ? get_sub_field('title') : $post_object->post_title;
+															$post_sub_title = get_sub_field('description') ? get_sub_field('description') : $post_object->post_excerpt;
+														}
+														
+													?>
+													<li>
+														<div class="cohorts-body-contents-type-details">
+															<div class="cohorts-body-contents-type-details-img">
+																<?php
+																	if ($row_layout == 'course') {
+																		?> <img src="<?=  PBD_CO_URL . '/assets/images/course-icon.png' ?>"> <?php
+																	} 
+																	else if ($row_layout == 'statement_of_commitment') {
+																		$soc_user = get_user_meta(get_current_user_id(), 'soc_'. $post_object->ID, true);
+																		if ($soc_user) {
 																			?>
-																			<div class="cohorts-body-contents-type-details-bot-left-definition">
-																				<ul>
-																					<li> <img src="<?=  PBD_CO_URL . '/assets/images/timer.png' ?>"> <?php the_sub_field('length'); ?> Hours </li>
-																					<li> <img src="<?=  PBD_CO_URL . '/assets/images/player-icon.png' ?>"> <?= $total_lessons ?> Lessons </li>
-																				</ul>
-																			</div>
-																			<div class="cohorts-body-contents-type-details-bot-left-percentage">
-																				<p> <?= $percentage ?> % Completed </p>
-																			</div>
-																			<div class="cohorts-body-contents-type-details-bot-left-progress">
-																				<progress id="file" value="<?= $percentage ?>" max="100"> </progress> 
-																			</div>
+																				<div class="progressbar progressbar-soc started" data-progress="0"> </div>
 																			<?php
-																		} 
-																		else if ($row_layout == 'event') {
-																			// Joshua design for event here
-																			$event_day = tribe_get_start_date($post_object->ID, true, 'l, F d, Y');
-																			$event_time = tribe_get_start_date($post_object->ID, true, 'g:i A');
-																			echo "<p> $event_day </p>";
-																			echo "<p> $event_time </p>";
+																		} else {
+																			?><img src="<?=  PBD_CO_URL . '/assets/images/soc-icon.png' ?>"><?php
 																		}
-																	?>
-																</div>
-																<div class="cohorts-body-contents-type-details-bot-right">
-																	<?php
-																		if ($row_layout == 'simple_link') {
-																			?> <a href="<?php echo get_sub_field('url'); ?>" <?= (get_sub_field('open_in_new_tab')) ? 'target="_blank"' : '' ?>> <?php echo get_sub_field('button_text'); ?> </a> <?php
-																		}
-																		else if ($row_layout == 'document') {
-																			?> <a href="<?php echo get_sub_field('url'); ?>" <?= (get_sub_field('open_in_new_tab')) ? 'target="_blank"' : '' ?>> <?php echo get_sub_field('button_text'); ?> </a> <?php
-																		}  
-																		else if ($row_layout == 'introduce_yourself') {
-																			?> <a href="<?php echo get_sub_field('url'); ?>" <?= (get_sub_field('open_in_new_tab')) ? 'target="_blank"' : '' ?>> 
-																			<img src="<?=  PBD_CO_URL . '/assets/images/hand-icon.png' ?>" />
-																			<?php echo get_sub_field('button_text'); ?> </a> <?php
-																		}
-																		else if ($row_layout == 'video') {
-																			?> <a href="<?php echo get_sub_field('url'); ?>" class="video-btn" 
-																			data-embed="<?php echo base64_encode(get_sub_field('embed_code'));?>"> 
-																			<?php echo get_sub_field('button_text'); ?> </a> <?php
-																		} 
-																		else if ($row_layout == 'call_recording') {
-																			$recording = get_sub_field('call_recording');
-																			$url = get_permalink($recording->ID);
-																			?> <a href="<?php echo $url; ?>" <?= (get_sub_field('open_in_new_tab')) ? 'target="_blank"' : '' ?>> <?php echo get_sub_field('button_text'); ?> </a>  <?php
-																		} 
-																		else if ($row_layout == 'event') {
+																	} else if ($row_layout == 'simple_link') {
+																		?> <img src="<?=  PBD_CO_URL . '/assets/images/link-icon.png' ?>"> <?php
+																	} else if ($row_layout == 'document') {
+																		?> <img src="<?=  PBD_CO_URL . '/assets/images/document-icon.png' ?>"> <?php
+																	}
+																	else if ($row_layout == 'call_recording') {
+																		?> <img src="<?=  PBD_CO_URL . '/assets/images/video-icon.png' ?>"> <?php
+																	}
+																	else if ($row_layout == 'video') {
+																		?> <img src="<?=  PBD_CO_URL . '/assets/images/video-icon.png' ?>"> <?php
+																	}
+																	else if ($row_layout == 'introduce_yourself') {
+																		?> <img src="<?=  PBD_CO_URL . '/assets/images/introduce-icon.png' ?>"> <?php
+																	}
+																	else {
+																		$event_month = tribe_get_start_date($post_object->ID, true, 'M');
+																		$event_day = tribe_get_start_date($post_object->ID, true, 'd');
+																		echo "<p> ". $event_month ." <span> ". $event_day ." </span> </p>";
+																		// echo 'here'. $post_object;
+																	}
+																?>
+															</div>
+															<div class="cohorts-body-contents-type-details-txt">
+																<h4> <?php echo $post_title ?> </h4>
+																<p> <?php echo  $post_sub_title ?> </p>
+																<div class="cohorts-body-contents-type-details-bot">
+																	<div class="cohorts-body-contents-type-details-bot-left">
+																		<?php
+																			if ($row_layout == 'course') {
+																				$user_progress = learndash_user_get_course_progress( get_current_user_id(),  $post_object->ID );
+																				$total_lessons = $user_progress['total'];
+																				$completed = $user_progress['completed'];
 
-																			$attendee_groups = false;
-																			if (class_exists('Tribe__Tickets__Tickets_View')) {
-																				$view = Tribe__Tickets__Tickets_View::instance();
-																				$attendee_groups = $view->get_event_rsvp_attendees_by_purchaser( $post_object->ID, get_current_user_id() );
+																				if ($completed) {
+																					$percentage = round($completed / $total_lessons * 100, 0);
+																				} else {
+																					$percentage = 0;
+																				}
+																				
+
+																				?>
+																				<div class="cohorts-body-contents-type-details-bot-left-definition">
+																					<ul>
+																						<li> <img src="<?=  PBD_CO_URL . '/assets/images/timer.png' ?>"> <?php the_sub_field('length'); ?> Hours </li>
+																						<li> <img src="<?=  PBD_CO_URL . '/assets/images/player-icon.png' ?>"> <?= $total_lessons ?> Lessons </li>
+																					</ul>
+																				</div>
+																				<div class="cohorts-body-contents-type-details-bot-left-percentage">
+																					<p> <?= $percentage ?> % Completed </p>
+																				</div>
+																				<div class="cohorts-body-contents-type-details-bot-left-progress">
+																					<progress id="file" value="<?= $percentage ?>" max="100"> </progress> 
+																				</div>
+																				<?php
+																			} 
+																			else if ($row_layout == 'event') {
+																				// Joshua design for event here
+																				$event_day = tribe_get_start_date($post_object->ID, true, 'l, F d, Y');
+																				$event_time = tribe_get_start_date($post_object->ID, true, 'g:i A');
+																				echo "<p> $event_day </p>";
+																				echo "<p> $event_time </p>";
 																			}
-																			
-
-																			if ($attendee_groups) {
-																				?> <a href="<?php echo get_permalink($post_object->ID); ?>">
-																					<img src="<?=  PBD_CO_URL . '/assets/images/check.png' ?>" />
-																				 Going 
-																				 </a> <?php
-																			} else {
-																				?> <a href="<?php echo get_permalink($post_object->ID); ?>">   <?= tribe_is_past_event($post_object->ID) ? 'Watch Replay' : 'Attend' ?> </a> <?php
-																			}	
-
-																			
-																		} 
-																		else if ($row_layout == 'statement_of_commitment') {
-																			$soc_user = get_user_meta(get_current_user_id(), 'soc_'. $post_object->ID, true);
-																			if ($soc_user) {
-																				?> <a href="#" > SIGNED </a> <?php
-																			} else {
-																				?> <a href="#" class="sign-commitment" data-id="<?php echo $post_object->ID ?>" data-modal-title="<?= get_sub_field('modal_title') ?>" data-modal-description="<?= get_sub_field('modal_description') ?>"> VIEW + SIGN </a> <?php
+																		?>
+																	</div>
+																	<div class="cohorts-body-contents-type-details-bot-right">
+																		<?php
+																			if ($row_layout == 'simple_link') {
+																				?> <a href="<?php echo get_sub_field('url'); ?>" <?= (get_sub_field('open_in_new_tab')) ? 'target="_blank"' : '' ?>> <?php echo get_sub_field('button_text'); ?> </a> <?php
 																			}
-																		}
-																		else {
-																			?> <a href="<?php echo get_permalink($post_object->ID); ?>"> VIEW </a> <?php
-																		}
-																	?>
-																	
+																			else if ($row_layout == 'document') {
+																				?> <a href="<?php echo get_sub_field('url'); ?>" <?= (get_sub_field('open_in_new_tab')) ? 'target="_blank"' : '' ?>> <?php echo get_sub_field('button_text'); ?> </a> <?php
+																			}  
+																			else if ($row_layout == 'introduce_yourself') {
+																				?> <a href="<?php echo get_sub_field('url'); ?>" <?= (get_sub_field('open_in_new_tab')) ? 'target="_blank"' : '' ?>> 
+																				<img src="<?=  PBD_CO_URL . '/assets/images/hand-icon.png' ?>" />
+																				<?php echo get_sub_field('button_text'); ?> </a> <?php
+																			}
+																			else if ($row_layout == 'video') {
+																				?> <a href="<?php echo get_sub_field('url'); ?>" class="video-btn" 
+																				data-embed="<?php echo base64_encode(get_sub_field('embed_code'));?>"> 
+																				<?php echo get_sub_field('button_text'); ?> </a> <?php
+																			} 
+																			else if ($row_layout == 'call_recording') {
+																				$recording = get_sub_field('call_recording');
+																				$url = get_permalink($recording->ID);
+																				?> <a href="<?php echo $url; ?>" <?= (get_sub_field('open_in_new_tab')) ? 'target="_blank"' : '' ?>> <?php echo get_sub_field('button_text'); ?> </a>  <?php
+																			} 
+																			else if ($row_layout == 'event') {
+
+																				$attendee_groups = false;
+																				if (class_exists('Tribe__Tickets__Tickets_View')) {
+																					$view = Tribe__Tickets__Tickets_View::instance();
+																					$attendee_groups = $view->get_event_rsvp_attendees_by_purchaser( $post_object->ID, get_current_user_id() );
+																				}
+																				
+
+																				if ($attendee_groups) {
+																					?> <a href="<?php echo get_permalink($post_object->ID); ?>">
+																						<img src="<?=  PBD_CO_URL . '/assets/images/check.png' ?>" />
+																					Going 
+																					</a> <?php
+																				} else {
+																					?> <a href="<?php echo get_permalink($post_object->ID); ?>">   <?= tribe_is_past_event($post_object->ID) ? 'Watch Replay' : 'Attend' ?> </a> <?php
+																				}	
+
+																				
+																			} 
+																			else if ($row_layout == 'statement_of_commitment') {
+																				$soc_user = get_user_meta(get_current_user_id(), 'soc_'. $post_object->ID, true);
+																				if ($soc_user) {
+																					?> <a href="#" > SIGNED </a> <?php
+																				} else {
+																					?> <a href="#" class="sign-commitment" data-id="<?php echo $post_object->ID ?>" data-modal-title="<?= get_sub_field('modal_title') ?>" data-modal-description="<?= get_sub_field('modal_description') ?>"> VIEW + SIGN </a> <?php
+																				}
+																			}
+																			else {
+																				?> <a href="<?php echo get_permalink($post_object->ID); ?>"> VIEW </a> <?php
+																			}
+																		?>
+																		
+																	</div>
 																</div>
 															</div>
 														</div>
-													</div>
-												</li>
-											<?php endwhile; ?>
-											</ul>
-										<?php endif; ?>
+													</li>
+												<?php endwhile; ?>
+												</ul>
+											<?php endif; ?>
+										</div>
 									</div>
+								</li>
+							<?php endwhile; ?>
+								<div class="progress-finish"> 
+									<h3> FINISH </h3>
 								</div>
-							</li>
-						<?php endwhile; ?>
-							<div class="progress-finish"> 
-								<h3> FINISH </h3>
-							</div>
-						</ul>
-					<?php endif; ?>
-				</div>
-			</div>
-
-			<?php 
-				if( have_rows('hosts') ) {
-					include_once(PBD_CO_INCLUDES_PATH . '/parts/hosts.php');
-				}
-			?>
-			
-		</div>
-		
-		<?php if (PBD_Cohorts::is_buddyboss_activity_enabled() && get_field('show_discussion_tab')): ?>
-			<div id="Discussion" class="cohorts-body-content tabcontent discussion-tabcontent" style="display:none">
-				<?php include_once(PBD_CO_INCLUDES_PATH . '/parts/discussion.php');  ?>
-			</div>
-		<?php endif; ?>
-
-		<?php if (PBD_Cohorts::is_buddyboss_group_enabled() && get_field('show_members_tab')): ?>
-			<div id="Members" class="cohorts-body-content tabcontent members-tabcontent" style="display:none">
-				<div id="buddypress" class="buddypress-wrap bp-single-plain-nav bp-dir-hori-nav">
-					<div id="members-group-list" class="group_members dir-list">
-						<?php include_once(PBD_CO_INCLUDES_PATH . '/parts/members-v2.php');  ?>
+							</ul>
+						<?php endif; ?>
 					</div>
 				</div>
+
+				<?php 
+					if( have_rows('hosts') ) {
+						include_once(PBD_CO_INCLUDES_PATH . '/parts/hosts.php');
+					}
+				?>
+				
 			</div>
-		<?php endif; ?>
-		
+			
+			<?php if (PBD_Cohorts::is_buddyboss_activity_enabled() && get_field('show_discussion_tab')): ?>
+				<div id="Discussion" class="cohorts-body-content tabcontent discussion-tabcontent" style="display:none">
+					<?php include_once(PBD_CO_INCLUDES_PATH . '/parts/discussion.php');  ?>
+				</div>
+			<?php endif; ?>
+
+			<?php if (PBD_Cohorts::is_buddyboss_group_enabled() && get_field('show_members_tab')): ?>
+				<div id="Members" class="cohorts-body-content tabcontent members-tabcontent" style="display:none">
+					<div id="buddypress" class="buddypress-wrap bp-single-plain-nav bp-dir-hori-nav">
+						<div id="members-group-list" class="group_members dir-list">
+							<?php include_once(PBD_CO_INCLUDES_PATH . '/parts/members-v2.php');  ?>
+						</div>
+					</div>
+				</div>
+			<?php endif; ?>
+			
+		</div>
 	</div>
 </div>
 
@@ -407,98 +410,12 @@ get_header();
 </div>
 
 <style>
-	#cohorts-body {
-		background: <?= PBD_Cohorts::is_buddyboss_enabled() ? buddyboss_theme_get_option('body_background') : '';?>
+	.cohorts-main-container {
+		--cohort-body-color: <?= PBD_Cohorts::is_buddyboss_enabled() ? buddyboss_theme_get_option('body_background') : '';?>;
+		--cohort-body-bg-color: <?= get_field('single_body_color', 'option') ? : '#FAF9F7' ?>;
+		--cohort-container-width: <?= get_field('single_container_max_width', 'option') ? : '1000' ?>px;
+		--cohort-progress-color: <?= PBD_Cohorts::is_buddyboss_enabled() ? buddyboss_theme_get_option('header_links_hover') : '#66D697';?>;
 	}
-	.modal {
-		display: none; /* Hidden by default */
-		position: fixed; /* Stay in place */
-		z-index: 10000; /* Sit on top */
-		left: 0;
-		top: 0;
-		width: 100%; /* Full width */
-		height: 100%; /* Full height */
-		overflow: auto; /* Enable scroll if needed */
-		background: rgba(0, 0, 0, 0.5);
-	}
-
-	/* Modal Content/Box */
-	.modal-content {
-		background-color: #fefefe;
-		margin: 10% auto 0 !important;
-		border: 1px solid #888;
-		width: calc(100% - 40px);
-		max-width: 740px;
-		padding:57px 50px;
-		height:auto;
-	}
-
-	/* The Close Button */
-	.close {
-		position:absolute;
-		cursor:pointer;
-		top:20px;
-		right:20px;
-	
-	}
-	.close svg {
-		width:auto;
-	}
-
-	.close:hover,
-	.close:focus {
-		color: black;
-		text-decoration: none;
-		cursor: pointer;
-	}
-
-	.checkbox-label {
-		display: flex;
-		flex-direction: row;
-		align-items: center;
-		padding: 0px;
-		gap: 16px;
-		font-weight: 400;
-		font-size: 14px;
-		line-height: 17px;
-		color: #393E41;
-	}
-
-	.checkbox-label input {
-		width: 20px;
-		height: 20px;
-	}
-
-	.form-group {
-		display: flex;
-		flex-direction: column;
-		align-items: flex-start;
-		padding: 0px;
-		gap: 10px;
-
-	}
-
-	li.locked div {
-		opacity: 0.5;
-	}
-
-	li.locked .progressbar {
-	}
-
-	li.locked h3:before {
-		content: '\eecc';
-		font-weight: 300;
-		font-family: bb-icons;
-		font-size: 18px;
-		margin-right:5px;
-	}
-
-	@media (max-width:601px) {
-		.modal-content {
-			padding:50px 20px;
-		}
-	}
-
 </style>
 
 <?php
