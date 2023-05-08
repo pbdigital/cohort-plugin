@@ -1,6 +1,89 @@
 <?php
 
+
+if( function_exists('acf_add_options_page') ) {
+    
+    acf_add_options_page(array(
+        'page_title'    => 'Cohort Settings',
+        'menu_title'    => 'Cohort Settings',
+        'menu_slug'     => 'cohort-settings',
+        'capability'    => 'edit_posts',
+        'redirect'      => false
+    ));
+    
+}
+
+	
+
 function add_acf_fields() {
+    // Add Cohort Settings Options Page
+    if( function_exists('acf_add_local_field_group') ):
+        acf_add_local_field_group(array(
+            'key' => 'group_64585213c8f2a',
+            'title' => 'Cohort Settings',
+            'fields' => array(
+                array(
+                    'key' => 'field_6458521877b28',
+                    'label' => 'Body Color',
+                    'name' => 'single_body_color',
+                    'aria-label' => '',
+                    'type' => 'color_picker',
+                    'instructions' => '',
+                    'required' => 0,
+                    'conditional_logic' => 0,
+                    'wrapper' => array(
+                        'width' => '',
+                        'class' => '',
+                        'id' => '',
+                    ),
+                    'default_value' => 'rgba(250, 249, 247, 1)',
+                    'enable_opacity' => 1,
+                    'return_format' => 'string',
+                ),
+                array(
+                    'key' => 'field_64585b6a96d93',
+                    'label' => 'Container Max Width',
+                    'name' => 'single_container_max_width',
+                    'aria-label' => '',
+                    'type' => 'number',
+                    'instructions' => '',
+                    'required' => 0,
+                    'conditional_logic' => 0,
+                    'wrapper' => array(
+                        'width' => '',
+                        'class' => '',
+                        'id' => '',
+                    ),
+                    'default_value' => 1000,
+                    'min' => 1000,
+                    'max' => 1800,
+                    'placeholder' => '',
+                    'step' => '',
+                    'prepend' => '',
+                    'append' => '',
+                ),
+            ),
+            'location' => array(
+                array(
+                    array(
+                        'param' => 'options_page',
+                        'operator' => '==',
+                        'value' => 'cohort-settings',
+                    ),
+                ),
+            ),
+            'menu_order' => 0,
+            'position' => 'normal',
+            'style' => 'default',
+            'label_placement' => 'left',
+            'instruction_placement' => 'label',
+            'hide_on_screen' => '',
+            'active' => true,
+            'description' => '',
+            'show_in_rest' => 0,
+        ));        
+    endif;		
+    
     if( function_exists('acf_add_local_field_group') ):
         acf_add_local_field_group(array(
             'key' => 'group_62bf89a53ae09',
