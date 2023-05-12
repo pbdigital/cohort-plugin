@@ -20,14 +20,24 @@ get_header();
 				<div class="cohorts-header-right">
 					<div class="cohorts-header-right-mid">
 						<?php
+							// $now = new DateTime();
+							// $start = new DateTime(get_field('start_date'));
+							// if ($start > $now && get_field('length') && $date_diff->d > 0) {
+							// 	$date_diff = $now->diff($start);
+							// 	$date_diff = ($date_diff->d > 1) ? $date_diff->d.' Days' : $date_diff->d.' Day';
+							// 	echo '<h6>Begins in ' . $date_diff . '</h6>';
+							// }
+
 							$now = new DateTime();
-							$start = new DateTime(get_field('start_date'));
-							if ($start > $now && get_field('length') && $date_diff->d > 0) {
-								$date_diff = $now->diff($start);
-								$date_diff = ($date_diff->d > 1) ? $date_diff->d.' Days' : $date_diff->d.' Day';
-								echo '<h6>Begins in ' . $date_diff . '</h6>';
-							}
+							$start_date = new DateTime(get_field('start_date'));
+							$difference = $now->diff($start_date);
+							$in_days = ($difference->d > 1) ? $difference->d.' Days' : $difference->d.' Day';
+
+							
 							echo '<h1>' . (get_field('title') ? get_field('title') : get_the_title()) . '</h1>';
+							
+							if ($in_days)
+								echo '<h6>Begins in ' . $in_days . '</h6>';
 						?>
 
 					</div>
@@ -63,7 +73,7 @@ get_header();
 							$text = str_replace('<p>', '',  $text); // Remove <p> tags
 							$text = str_replace('</p>', '<br><br>', $text); // Replace </p> with <br>
 							?>
-							<div class="more" style="display: none"><?php echo $text; ?> <?= $now > $start_date ? null : '<span>•</span>  <span class="range"> Begins in '. $difference->d .' days </span>' ?></div>
+							<div class="more" style="display: none"><?php echo $text; ?> <?= $now > $start_date ? null : '' ?></div>
 						<?php endif; ?>
 					</div>
 				</div>
@@ -111,10 +121,10 @@ get_header();
 									foreach($types as $type) {
 										if ($type['acf_fc_layout'] == 'course') {
 											$total_hours += (int)$type['length'];
-											$total_lessons += learndash_get_course_steps_count($type['course']->ID);
+											$total_lessons += (function_exists('learndash_get_course_steps_count') ?  learndash_get_course_steps_count($type['course']->ID) : 0);
 
 
-											$user_progress = learndash_user_get_course_progress( get_current_user_id(),  $type['course']->ID );
+											$user_progress = (function_exists('learndash_user_get_course_progress') ? learndash_user_get_course_progress( get_current_user_id(),  $type['course']->ID ) : 0);
 											$total_completed += $user_progress['completed'];
 
 										}
@@ -235,7 +245,7 @@ get_header();
 																	<div class="cohorts-body-contents-type-details-bot-left">
 																		<?php
 																			if ($row_layout == 'course') {
-																				$user_progress = learndash_user_get_course_progress( get_current_user_id(),  $post_object->ID );
+																				$user_progress = (function_exists('learndash_user_get_course_progress') ? learndash_user_get_course_progress( get_current_user_id(),  $post_object->ID ) : array('total' => 0, 'completed' => 0));
 																				$total_lessons = $user_progress['total'];
 																				$completed = $user_progress['completed'];
 
@@ -404,7 +414,7 @@ get_header();
 	<div class="modal-content">
 	<span class="close"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 6 6 18M6 6l12 12" stroke="#B3B3B3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
 		<div class="embed-code">
-			<div class="fluid-width-video-wrapper" style="padding-top: 380px;"></div>
+			<div class="fluid-width-video-wrapper"></div>
 		</div>
 	</div>
 </div>

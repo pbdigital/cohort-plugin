@@ -413,7 +413,6 @@ progress[value]::-webkit-progress-value {
     line-height: 20px;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: #000000;
     text-decoration: none;
     border: 1px solid #000000;
     border-radius: 6px;
@@ -632,11 +631,14 @@ li.locked .progressbar {
 }
 
 li.locked h3:before {
-    content: '\eecc';
-    font-weight: 300;
-    font-family: bb-icons;
-    font-size: 18px;
-    margin-right:5px;
+    // content: '\eecc';
+    // font-weight: 300;
+    // font-family: bb-icons;
+    // font-size: 18px;
+    margin-right: 10px;
+    content: url('../images/lock.svg');
+    transform: translateY(5px);
+    display: inline-block;
 }
 
 @media (max-width:601px) {
@@ -918,6 +920,30 @@ li.locked h3:before {
     }
 }
 
+.modal {
+    .modal-content {
+        position: absolute;
+        max-height: calc(100vh - 80px);
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        margin: 0 !important;
+        .fluid-width-video-wrapper {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            iframe {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                top: 0;
+                left: 0;
+            }
+        }
+    }
+    
+}
+
 .single-cohort {
     .top-heading {
         padding: 18px 20px;
@@ -936,6 +962,9 @@ li.locked h3:before {
                 width: 20px;
             }
         }
+    }
+    #cohorts-header h6 {
+        margin-top: 0;
     }
     .cohorts-body-right-content {
         padding: 0 !important;
@@ -960,6 +989,12 @@ li.locked h3:before {
     .cohort-dicussion-wrapper {
         > iframe {
             border: 0;
+        }
+    }
+
+    .cohorts-body-content {
+        h4 {
+            margin-top: 0;
         }
     }
 }
